@@ -1,7 +1,11 @@
 import logging
 import coloredlogs
 import struct
-import ElfInfo
+
+from Formats.ElfHeader import ElfHeader
+from Formats.ProgramHeaders import ProgramHeaders
+from Formats.Sections import Sections
+
 
 class ElfParser:
     def __init__(self, file):
@@ -21,22 +25,22 @@ class ElfParser:
         self.parse_sections(data)
 
     def parse_header(self, data):
-        self.elf_header = ElfInfo.ElfHeader()
+        self.elf_header = ElfHeader()
         self.elf_header.parse(data)
         # self.elf_header.print_elf_header()
 
     def parse_program_headers(self, data):
-        self.program_headers = ElfInfo.ProgramHeaders(self.elf_header)
+        self.program_headers = ProgramHeaders(self.elf_header)
         self.program_headers.parse(data)
-        # self.program_headers.print_program_headers()
+        self.program_headers.print_program_headers()
 
     def parse_sections(self, data):
-        self.sections = ElfInfo.Sections(self.elf_header)
+        self.sections = Sections(self.elf_header)
         self.sections.parse_section_headers(data)
         # self.sections.print_section_headers()
 
         self.sections.parse_sections(data)
-        self.sections.print_sections()
+        # self.sections.print_sections()
 
 
 if __name__ == "__main__":
